@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import HomePage from "./pages/HomePage/HomePage.jsx";
 import ToolsPage from "./pages/ToolsPage/ToolsPage.jsx";
+import UsersPage from "./pages/UsersPage/UsersPage.jsx";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 import "./App.css";
 
@@ -71,6 +72,20 @@ class App extends Component {
                             isLoggedIn ? (
                                 <DashboardLayout username={username} onLogout={this.handleLogout}>
                                     <ToolsPage />
+                                </DashboardLayout>
+                            ) : (
+                                <Navigate to="/login" replace />
+                            )
+                        }
+                    />
+
+                    {/* Quản lý Người dùng */}
+                    <Route
+                        path="/users"
+                        element={
+                            isLoggedIn ? (
+                                <DashboardLayout username={username} onLogout={this.handleLogout}>
+                                    <UsersPage />
                                 </DashboardLayout>
                             ) : (
                                 <Navigate to="/login" replace />

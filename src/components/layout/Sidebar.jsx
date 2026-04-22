@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const NAV_ITEMS = [
     { label: "Trang chủ", path: "/", icon: "🏠" },
     { label: "Ecommerce", path: "/tools", icon: "🛒" },
+    { label: "Quản lý User", path: "/users", icon: "👥" },
 ];
 
 class Sidebar extends Component {
