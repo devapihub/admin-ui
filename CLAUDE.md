@@ -42,6 +42,17 @@ This is the **admin UI** for the DevAPIHub platform — a React SPA for authenti
 - `src/pages/` — Page-level components (one folder per page)
 - `src/App.jsx` — Router and top-level auth state
 
+## Git Workflow
+
+**Khi được yêu cầu push lên main/master, luôn thực hiện đúng 4 bước sau theo thứ tự:**
+
+1. **Tạo GitHub Issue** — mô tả rõ task/feature/fix cần làm
+2. **Tạo branch mới** — đặt tên liên quan tới issue (e.g. `feat/issue-12-add-login`, `fix/issue-5-token-expiry`)
+3. **Commit & push lên branch mới** — KHÔNG push thẳng lên main
+4. **Tạo Pull Request** — từ branch mới vào `main`, reference issue trong PR description (e.g. `Closes #12`)
+
+Không bao giờ push trực tiếp vào `main`.
+
 ## Notes
 
 - WebSocket dependencies (STOMP.js, SockJS) are installed but not yet wired up in the application code.
