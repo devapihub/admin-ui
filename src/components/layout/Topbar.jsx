@@ -8,11 +8,14 @@ class Topbar extends Component {
     }
 
     handleMouseEnter = () => {
+        if (this.leaveTimeout) clearTimeout(this.leaveTimeout);
         this.setState({ dropdownOpen: true });
     };
 
     handleMouseLeave = () => {
-        this.setState({ dropdownOpen: false });
+        this.leaveTimeout = setTimeout(() => {
+            this.setState({ dropdownOpen: false });
+        }, 150);
     };
 
     render() {
