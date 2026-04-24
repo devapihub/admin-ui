@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { ThemeContext } from "../../context/ThemeContext.jsx";
 
 class Topbar extends Component {
@@ -216,15 +217,20 @@ class Topbar extends Component {
                                         </div>
                                     </div>
                                 ))}
-                                <div style={{
-                                    padding: "10px 16px",
-                                    textAlign: "center",
-                                    fontSize: 13,
-                                    color: "#1677ff",
-                                    cursor: "pointer",
-                                }}>
+                                <Link
+                                    to="/notifications"
+                                    onClick={() => this.setState({ notifOpen: false })}
+                                    style={{
+                                        display: "block",
+                                        padding: "10px 16px",
+                                        textAlign: "center",
+                                        fontSize: 13,
+                                        color: "#1677ff",
+                                        textDecoration: "none",
+                                    }}
+                                >
                                     Xem tất cả thông báo
-                                </div>
+                                </Link>
                             </div>
                         )}
                     </div>

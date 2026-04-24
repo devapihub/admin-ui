@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import HomePage from "./pages/HomePage/HomePage.jsx";
 import ToolsPage from "./pages/ToolsPage/ToolsPage.jsx";
 import UsersPage from "./pages/UsersPage/UsersPage.jsx";
+import NotificationsPage from "./pages/NotificationsPage/NotificationsPage.jsx";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 import ThemeProvider from "./context/ThemeContext.jsx";
 import "./App.css";
@@ -88,6 +89,20 @@ class App extends Component {
                             isLoggedIn ? (
                                 <DashboardLayout username={username} onLogout={this.handleLogout}>
                                     <UsersPage />
+                                </DashboardLayout>
+                            ) : (
+                                <Navigate to="/login" replace />
+                            )
+                        }
+                    />
+
+                    {/* Thông báo */}
+                    <Route
+                        path="/notifications"
+                        element={
+                            isLoggedIn ? (
+                                <DashboardLayout username={username} onLogout={this.handleLogout}>
+                                    <NotificationsPage />
                                 </DashboardLayout>
                             ) : (
                                 <Navigate to="/login" replace />
