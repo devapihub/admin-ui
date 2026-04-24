@@ -47,3 +47,6 @@ This is the **admin UI** for the DevAPIHub platform — a React SPA for authenti
 - WebSocket dependencies (STOMP.js, SockJS) are installed but not yet wired up in the application code.
 - The backend API runs on port 8080 locally; make sure it's running when developing against local backend.
 - Docker image is published to `trivip002/admin-ui:latest` (see README for buildx commands).
+- Trước khi tạo 1 branch mới để fix bug, nhớ tạo 1 issue đính kèm.
+- Khi tạo 1 branch và push lên master, nhớ tạo PR để review code trước khi merge vào master.
+- Sau khi merge vào master xong nhớ remove branch đó luôn.
