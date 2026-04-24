@@ -1,17 +1,21 @@
 import React, { Component } from "react";
+import { ThemeContext } from "../../context/ThemeContext.jsx";
 
 function formatPrice(price) {
     return price.toLocaleString("vi-VN") + "đ";
 }
 
 class ToolTable extends Component {
+    static contextType = ThemeContext;
+
     render() {
         const { tools, onEdit, onDelete, onToggleActive } = this.props;
+        const { theme } = this.context;
 
         const tableStyle = {
             width: "100%",
             borderCollapse: "collapse",
-            background: "#fff",
+            background: theme.dropdown.bg,
             borderRadius: 8,
             overflow: "hidden",
             boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
@@ -23,16 +27,16 @@ class ToolTable extends Component {
             textAlign: "left",
             fontWeight: 600,
             fontSize: 13,
-            color: "#555",
-            background: "#fafafa",
-            borderBottom: "1px solid #f0f0f0",
+            color: theme.dropdown.textSub,
+            background: theme.toggleIcon === "🌙" ? "rgba(255,255,255,0.04)" : "#fafafa",
+            borderBottom: `1px solid ${theme.dropdown.border}`,
             whiteSpace: "nowrap",
         };
 
         const tdStyle = {
             padding: "12px 16px",
-            borderBottom: "1px solid #f5f5f5",
-            color: "#333",
+            borderBottom: `1px solid ${theme.dropdown.border}`,
+            color: theme.dropdown.text,
             verticalAlign: "middle",
         };
 
@@ -53,7 +57,7 @@ class ToolTable extends Component {
             padding: "2px 8px",
             borderRadius: 4,
             fontSize: 12,
-            background: "#f0f5ff",
+            background: theme.toggleIcon === "🌙" ? "rgba(47,84,235,0.15)" : "#f0f5ff",
             color: "#2f54eb",
             border: "1px solid #adc6ff",
         };
@@ -76,7 +80,7 @@ class ToolTable extends Component {
                     <tbody>
                         {tools.length === 0 ? (
                             <tr>
-                                <td colSpan={8} style={{ ...tdStyle, textAlign: "center", color: "#aaa", padding: 32 }}>
+                                <td colSpan={8} style={{ ...tdStyle, textAlign: "center", color: theme.dropdown.textSub, padding: 32 }}>
                                     Chưa có sản phẩm nào
                                 </td>
                             </tr>
@@ -101,14 +105,14 @@ class ToolTable extends Component {
 
                                 const stockStyle = {
                                     fontWeight: 600,
-                                    color: product.stock === 0 ? "#ff4d4f" : product.stock < 10 ? "#fa8c16" : "#333",
+                                    color: product.stock === 0 ? "#ff4d4f" : product.stock < 10 ? "#fa8c16" : theme.dropdown.text,
                                 };
 
                                 const createdDate = new Date(product.createdAt).toLocaleDateString("vi-VN");
 
                                 return (
                                     <tr key={product.id}>
-                                        <td style={{ ...tdStyle, color: "#999", width: 48 }}>{index + 1}</td>
+                                        <td style={{ ...tdStyle, color: theme.dropdown.textSub, width: 48 }}>{index + 1}</td>
                                         <td style={{ ...tdStyle, fontWeight: 500, maxWidth: 220 }}>{product.name}</td>
                                         <td style={tdStyle}>
                                             <span style={categoryBadgeStyle}>{product.category}</span>
@@ -120,23 +124,17 @@ class ToolTable extends Component {
                                             <span style={stockStyle}>{product.stock}</span>
                                         </td>
                                         <td style={tdStyle}>
-                                            <span style={badgeStyle}>
-                                                {product.active ? "Đang bán" : "Ngừng bán"}
-                                            </span>
+                                            <span style={badgeStyle}>{product.active ? "Đang bán" : "Ngừng bán"}</span>
                                         </td>
-                                        <td style={{ ...tdStyle, whiteSpace: "nowrap", color: "#888" }}>
+                                        <td style={{ ...tdStyle, whiteSpace: "nowrap", color: theme.dropdown.textSub }}>
                                             {createdDate}
                                         </td>
                                         <td style={{ ...tdStyle, whiteSpace: "nowrap" }}>
-                                            <button style={editBtn} onClick={() => onEdit(product)}>
-                                                Sửa
-                                            </button>
+                                            <button style={editBtn} onClick={() => onEdit(product)}>Sửa</button>
                                             <button style={toggleBtn} onClick={() => onToggleActive(product.id)}>
                                                 {product.active ? "Ẩn" : "Bán"}
                                             </button>
-                                            <button style={deleteBtn} onClick={() => onDelete(product.id)}>
-                                                Xoá
-                                            </button>
+                                            <button style={deleteBtn} onClick={() => onDelete(product.id)}>Xoá</button>
                                         </td>
                                     </tr>
                                 );
