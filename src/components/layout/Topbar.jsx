@@ -6,8 +6,9 @@ class Topbar extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { dropdownOpen: false };
+        this.state = { dropdownOpen: false, notifOpen: false };
         this.avatarRef = React.createRef();
+        this.notifRef = React.createRef();
     }
 
     handleMouseEnter = () => {
@@ -18,9 +19,19 @@ class Topbar extends Component {
         this.setState({ dropdownOpen: false });
     };
 
+    handleNotifToggle = () => {
+        this.setState((prev) => ({ notifOpen: !prev.notifOpen }));
+    };
+
+    handleNotifBlur = (e) => {
+        if (this.notifRef.current && !this.notifRef.current.contains(e.relatedTarget)) {
+            this.setState({ notifOpen: false });
+        }
+    };
+
     render() {
         const { username, onLogout } = this.props;
-        const { dropdownOpen } = this.state;
+        const { dropdownOpen, notifOpen } = this.state;
         const { theme, toggleTheme } = this.context;
 
         const initial = username ? username.charAt(0).toUpperCase() : "U";
@@ -118,6 +129,105 @@ class Topbar extends Component {
                     >
                         {theme.toggleIcon}
                     </button>
+
+                    {/* Notification bell */}
+                    <div
+                        style={{ position: "relative" }}
+                        ref={this.notifRef}
+                        onBlur={this.handleNotifBlur}
+                    >
+                        <button
+                            style={{ ...toggleBtnStyle, fontSize: 20 }}
+                            onClick={this.handleNotifToggle}
+                            title="Thông báo"
+                        >
+                            <span style={{ position: "relative", display: "inline-block" }}>
+                                🔔
+                                <span style={{
+                                    position: "absolute",
+                                    top: -4,
+                                    right: -4,
+                                    background: "#ff4d4f",
+                                    color: "#fff",
+                                    borderRadius: "50%",
+                                    width: 16,
+                                    height: 16,
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    lineHeight: 1,
+                                }}>3</span>
+                            </span>
+                        </button>
+
+                        {notifOpen && (
+                            <div style={{
+                                position: "absolute",
+                                top: 48,
+                                right: 0,
+                                background: theme.dropdown.bg,
+                                borderRadius: 8,
+                                boxShadow: theme.dropdown.shadow,
+                                width: 300,
+                                zIndex: 999,
+                                border: `1px solid ${theme.dropdown.border}`,
+                                overflow: "hidden",
+                            }}>
+                                <div style={{
+                                    padding: "12px 16px",
+                                    borderBottom: `1px solid ${theme.dropdown.border}`,
+                                    fontWeight: 600,
+                                    fontSize: 14,
+                                    color: theme.dropdown.text,
+                                }}>
+                                    Thông báo
+                                </div>
+                                {[
+                                    { id: 1, title: "Người dùng mới đăng ký", time: "2 phút trước", unread: true },
+                                    { id: 2, title: "Tool AI được cập nhật", time: "1 giờ trước", unread: true },
+                                    { id: 3, title: "Báo cáo hàng tuần sẵn sàng", time: "3 giờ trước", unread: true },
+                                ].map((n) => (
+                                    <div
+                                        key={n.id}
+                                        style={{
+                                            padding: "12px 16px",
+                                            borderBottom: `1px solid ${theme.dropdown.border}`,
+                                            display: "flex",
+                                            alignItems: "flex-start",
+                                            gap: 10,
+                                            cursor: "pointer",
+                                            background: n.unread
+                                                ? (theme.toggleIcon === "🌙" ? "rgba(22,119,255,0.06)" : "rgba(22,119,255,0.04)")
+                                                : "transparent",
+                                        }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.background = theme.toggleIcon === "🌙" ? "rgba(255,255,255,0.05)" : "#f5f5f5")}
+                                        onMouseLeave={(e) => (e.currentTarget.style.background = n.unread ? (theme.toggleIcon === "🌙" ? "rgba(22,119,255,0.06)" : "rgba(22,119,255,0.04)") : "transparent")}
+                                    >
+                                        <span style={{
+                                            width: 8, height: 8, borderRadius: "50%",
+                                            background: n.unread ? "#1677ff" : "transparent",
+                                            flexShrink: 0, marginTop: 5,
+                                        }} />
+                                        <div>
+                                            <div style={{ fontSize: 13, color: theme.dropdown.text, marginBottom: 2 }}>{n.title}</div>
+                                            <div style={{ fontSize: 11, color: theme.dropdown.textSub }}>{n.time}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                                <div style={{
+                                    padding: "10px 16px",
+                                    textAlign: "center",
+                                    fontSize: 13,
+                                    color: "#1677ff",
+                                    cursor: "pointer",
+                                }}>
+                                    Xem tất cả thông báo
+                                </div>
+                            </div>
+                        )}
+                    </div>
 
                     {/* Avatar + dropdown */}
                     <div
