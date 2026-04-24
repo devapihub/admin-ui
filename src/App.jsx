@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage/HomePage.jsx";
 import ToolsPage from "./pages/ToolsPage/ToolsPage.jsx";
 import UsersPage from "./pages/UsersPage/UsersPage.jsx";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
+import ThemeProvider from "./context/ThemeContext.jsx";
 import "./App.css";
 
 class App extends Component {
@@ -49,6 +50,7 @@ class App extends Component {
         const { isLoggedIn, username } = this.state;
 
         return (
+            <ThemeProvider>
             <BrowserRouter>
                 <Routes>
                     {/* Home (cần login) */}
@@ -109,6 +111,7 @@ class App extends Component {
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </BrowserRouter>
+            </ThemeProvider>
         );
     }
 }

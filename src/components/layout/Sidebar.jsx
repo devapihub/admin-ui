@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { ThemeContext } from "../../context/ThemeContext.jsx";
 
 const NAV_ITEMS = [
     { label: "Trang chủ", path: "/", icon: "🏠" },
@@ -8,6 +9,8 @@ const NAV_ITEMS = [
 ];
 
 class Sidebar extends Component {
+    static contextType = ThemeContext;
+
     constructor(props) {
         super(props);
         this.state = { collapsed: false };
@@ -23,16 +26,17 @@ class Sidebar extends Component {
 
     render() {
         const { collapsed } = this.state;
+        const { theme } = this.context;
         const currentPath = window.location.pathname;
         const width = collapsed ? 56 : 220;
 
         const sidebarStyle = {
             width,
             minHeight: "100vh",
-            background: "#1a1a2e",
+            background: theme.sidebar.bg,
             display: "flex",
             flexDirection: "column",
-            transition: "width 0.2s ease",
+            transition: "width 0.2s ease, background 0.2s ease",
             flexShrink: 0,
             position: "fixed",
             top: 0,
@@ -48,7 +52,7 @@ class Sidebar extends Component {
             alignItems: "center",
             justifyContent: collapsed ? "center" : "space-between",
             padding: collapsed ? "0 12px" : "0 16px",
-            borderBottom: "1px solid rgba(255,255,255,0.08)",
+            borderBottom: `1px solid ${theme.sidebar.border}`,
             flexShrink: 0,
         };
 
@@ -95,7 +99,7 @@ class Sidebar extends Component {
                             padding: collapsed ? "12px 0" : "12px 16px",
                             justifyContent: collapsed ? "center" : "flex-start",
                             textDecoration: "none",
-                            color: isActive ? "#fff" : "rgba(255,255,255,0.6)",
+                            color: isActive ? theme.sidebar.textActive : theme.sidebar.text,
                             background: isActive ? "rgba(255,255,255,0.12)" : "transparent",
                             borderLeft: isActive ? "3px solid #4f8ef7" : "3px solid transparent",
                             fontSize: 14,

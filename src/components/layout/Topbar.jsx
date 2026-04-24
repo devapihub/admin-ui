@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import { ThemeContext } from "../../context/ThemeContext.jsx";
 
 class Topbar extends Component {
+    static contextType = ThemeContext;
+
     constructor(props) {
         super(props);
         this.state = { dropdownOpen: false };
@@ -18,13 +21,14 @@ class Topbar extends Component {
     render() {
         const { username, onLogout } = this.props;
         const { dropdownOpen } = this.state;
+        const { theme, toggleTheme } = this.context;
 
         const initial = username ? username.charAt(0).toUpperCase() : "U";
 
         const topbarStyle = {
             height: 56,
-            background: "#fff",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+            background: theme.topbar.bg,
+            boxShadow: theme.topbar.shadow,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -49,29 +53,39 @@ class Topbar extends Component {
             flexShrink: 0,
         };
 
+        const toggleBtnStyle = {
+            background: "none",
+            border: "none",
+            fontSize: 20,
+            cursor: "pointer",
+            padding: "4px 8px",
+            borderRadius: 6,
+            lineHeight: 1,
+        };
+
         const dropdownStyle = {
             position: "absolute",
             top: 48,
             right: 0,
-            background: "#fff",
+            background: theme.dropdown.bg,
             borderRadius: 8,
-            boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+            boxShadow: theme.dropdown.shadow,
             minWidth: 180,
             zIndex: 999,
             overflow: "hidden",
-            border: "1px solid #f0f0f0",
+            border: `1px solid ${theme.dropdown.border}`,
         };
 
         const dropdownHeaderStyle = {
             padding: "12px 16px",
-            borderBottom: "1px solid #f0f0f0",
+            borderBottom: `1px solid ${theme.dropdown.border}`,
             fontSize: 13,
-            color: "#888",
+            color: theme.dropdown.textSub,
         };
 
         const dropdownUsernameStyle = {
             fontWeight: 600,
-            color: "#333",
+            color: theme.dropdown.text,
             fontSize: 14,
         };
 
@@ -91,36 +105,47 @@ class Topbar extends Component {
 
         return (
             <div style={topbarStyle}>
-                <span style={{ fontSize: 15, fontWeight: 600, color: "#1a1a2e" }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: theme.topbar.text }}>
                     DevAPIHub Admin
                 </span>
 
-                {/* Avatar + dropdown */}
-                <div
-                    style={{ position: "relative" }}
-                    onMouseEnter={this.handleMouseEnter}
-                    onMouseLeave={this.handleMouseLeave}
-                    ref={this.avatarRef}
-                >
-                    <div style={avatarStyle}>{initial}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    {/* Theme toggle */}
+                    <button
+                        style={toggleBtnStyle}
+                        onClick={toggleTheme}
+                        title="Đổi theme"
+                    >
+                        {theme.toggleIcon}
+                    </button>
 
-                    {dropdownOpen && (
-                        <div style={dropdownStyle}>
-                            <div style={dropdownHeaderStyle}>
-                                <div style={{ fontSize: 12, marginBottom: 2 }}>Đang đăng nhập</div>
-                                <div style={dropdownUsernameStyle}>{username}</div>
+                    {/* Avatar + dropdown */}
+                    <div
+                        style={{ position: "relative" }}
+                        onMouseEnter={this.handleMouseEnter}
+                        onMouseLeave={this.handleMouseLeave}
+                        ref={this.avatarRef}
+                    >
+                        <div style={avatarStyle}>{initial}</div>
+
+                        {dropdownOpen && (
+                            <div style={dropdownStyle}>
+                                <div style={dropdownHeaderStyle}>
+                                    <div style={{ fontSize: 12, marginBottom: 2 }}>Đang đăng nhập</div>
+                                    <div style={dropdownUsernameStyle}>{username}</div>
+                                </div>
+                                <button
+                                    style={logoutItemStyle}
+                                    onClick={onLogout}
+                                    onMouseEnter={(e) => (e.currentTarget.style.background = "#fff2f0")}
+                                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                                >
+                                    <span>⎋</span>
+                                    <span>Đăng xuất</span>
+                                </button>
                             </div>
-                            <button
-                                style={logoutItemStyle}
-                                onClick={onLogout}
-                                onMouseEnter={(e) => (e.currentTarget.style.background = "#fff2f0")}
-                                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                            >
-                                <span>⎋</span>
-                                <span>Đăng xuất</span>
-                            </button>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
             </div>
         );

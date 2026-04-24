@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import Sidebar from "./Sidebar.jsx";
 import Topbar from "./Topbar.jsx";
+import { ThemeContext } from "../../context/ThemeContext.jsx";
 
 class DashboardLayout extends Component {
+    static contextType = ThemeContext;
+
     constructor(props) {
         super(props);
         this.state = { sidebarCollapsed: false };
@@ -15,6 +18,7 @@ class DashboardLayout extends Component {
     render() {
         const { username, onLogout, children } = this.props;
         const { sidebarCollapsed } = this.state;
+        const { theme } = this.context;
         const sidebarWidth = sidebarCollapsed ? 56 : 220;
 
         const contentWrapperStyle = {
@@ -29,9 +33,11 @@ class DashboardLayout extends Component {
         const mainStyle = {
             flex: 1,
             padding: 24,
-            background: "#f0f2f5",
+            background: theme.main.bg,
+            color: theme.main.text,
             overflowY: "auto",
             fontFamily: "sans-serif",
+            transition: "background 0.2s ease",
         };
 
         return (
