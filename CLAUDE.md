@@ -49,6 +49,17 @@ Project-scoped agents defined in `.claude/agents/`. Dùng Agent tool với `suba
 - **`github-agent`** — Mọi tương tác GitHub: tạo issue, branch, PR, review, merge, xóa branch. Tuân theo workflow của project.
 - **`infra-devops-agent`** — Infrastructure & DevOps: Docker, Nginx, deployment, server management, CI/CD research.
 
+## Response Attribution
+
+Ở cuối **mỗi** response, luôn thêm dòng ghi rõ agent nào đang trả lời, theo định dạng:
+
+> `— [tên-agent]`
+
+Các giá trị hợp lệ:
+- `— main-agent` — Claude Code chính (không phải sub-agent nào)
+- `— github-agent` — khi đang chạy trong context của github-agent
+- `— infra-devops-agent` — khi đang chạy trong context của infra-devops-agent
+
 ## Notes
 
 - WebSocket dependencies (STOMP.js, SockJS) are installed but not yet wired up in the application code.
