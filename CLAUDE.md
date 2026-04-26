@@ -42,6 +42,13 @@ This is the **admin UI** for the DevAPIHub platform — a React SPA for authenti
 - `src/pages/` — Page-level components (one folder per page)
 - `src/App.jsx` — Router and top-level auth state
 
+## Sub Agents
+
+Project-scoped agents defined in `.claude/agents/`. Dùng Agent tool với `subagent_type` tương ứng để kích hoạt.
+
+- **`github-agent`** — Mọi tương tác GitHub: tạo issue, branch, PR, review, merge, xóa branch. Tuân theo workflow của project.
+- **`infra-devops-agent`** — Infrastructure & DevOps: Docker, Nginx, deployment, server management, CI/CD research.
+
 ## Notes
 
 - WebSocket dependencies (STOMP.js, SockJS) are installed but not yet wired up in the application code.
