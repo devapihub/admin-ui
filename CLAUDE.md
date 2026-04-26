@@ -60,11 +60,28 @@ Các giá trị hợp lệ:
 - `— github-agent` — khi đang chạy trong context của github-agent
 - `— infra-devops-agent` — khi đang chạy trong context của infra-devops-agent
 
+## Git Workflows
+
+### "push lên master" — Full auto-merge workflow
+Khi user yêu cầu **push lên master**, thực hiện đầy đủ các bước sau theo thứ tự:
+1. Tạo branch mới từ master (đặt tên theo convention: `fix/...`, `feat/...`, `docs/...`)
+2. Commit toàn bộ thay đổi lên branch mới và push lên remote
+3. Tạo GitHub issue mô tả nội dung thay đổi
+4. Tạo Pull Request vào master (link với issue vừa tạo)
+5. Merge Pull Request vào master
+6. Xóa branch vừa merge
+7. Checkout về master và pull code mới nhất về local
+
+### "push và để tôi review" — PR-only workflow
+Khi user yêu cầu **push và để tôi review**, chỉ thực hiện:
+1. Tạo branch mới từ master (đặt tên theo convention: `fix/...`, `feat/...`, `docs/...`)
+2. Commit toàn bộ thay đổi lên branch mới và push lên remote
+3. Tạo GitHub issue mô tả nội dung thay đổi
+4. Tạo Pull Request vào master (link với issue vừa tạo)
+5. Dừng lại — **không merge**, chờ user review và quyết định
+
 ## Notes
 
 - WebSocket dependencies (STOMP.js, SockJS) are installed but not yet wired up in the application code.
 - The backend API runs on port 8080 locally; make sure it's running when developing against local backend.
 - Docker image is published to `trivip002/admin-ui:latest` (see README for buildx commands).
-- Trước khi tạo 1 branch mới để fix bug, nhớ tạo 1 issue đính kèm.
-- Khi tạo 1 branch và push lên master, nhớ tạo PR để review code trước khi merge vào master.
-- Sau khi merge vào master xong nhớ remove branch đó luôn.
