@@ -49,6 +49,17 @@ Project-scoped agents defined in `.claude/agents/`. Dùng Agent tool với `suba
 - **`github-agent`** — Mọi tương tác GitHub: tạo issue, branch, PR, review, merge, xóa branch. Tuân theo workflow của project.
 - **`infra-devops-agent`** — Infrastructure & DevOps: Docker, Nginx, deployment, server management, CI/CD research.
 
+### Delegation Rules
+
+**Tất cả** các tác vụ liên quan đến git hoặc GitHub đều phải được delegate cho `github-agent`, bao gồm:
+- Commit, push, tạo branch
+- "push lên master" workflow (full auto-merge)
+- "push và để tôi review" workflow (PR-only)
+- Tạo/đóng issue, tạo/merge/xóa PR
+- Bất kỳ thao tác nào với `git` CLI hoặc GitHub API
+
+Main agent **không tự thực hiện** các tác vụ git — luôn delegate cho `github-agent`.
+
 ## Response Attribution
 
 Ở cuối **mỗi** response, luôn thêm dòng ghi rõ agent nào đang trả lời, theo định dạng:
