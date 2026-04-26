@@ -19,11 +19,21 @@ You are an infrastructure and DevOps specialist for the DevAPIHub platform. Your
 
 - **Docker**: Multi-stage builds, published to Docker Hub (`trivip002/admin-ui:latest`)
 - **Nginx**: Serves the SPA, must have `try_files` for client-side routing
-- **Makefile**: Primary deployment interface
-  - `make release` — install → build → deploy → nginx-restart on remote
-  - `make deploy` — SCP `dist/` to remote server
 - **Kubernetes (EKS)**: Production workloads chạy trên Amazon EKS
-- **ArgoCD**: GitOps deployment — K8s manifests quản lý tại `https://github.com/devapihub/argocd/tree/main/app/admin-ui/k8s`
+- **ArgoCD (GitOps)**: Deployment được trigger bằng cách commit thay đổi image tag vào ArgoCD repo
+  - ArgoCD repo: `devapihub/argocd` tại `app/admin-ui/k8s`
+  - ArgoCD tự động sync và deploy lên EKS khi manifest thay đổi
+
+## Deployment Workflow (Production)
+
+1. Build và push Docker image lên Docker Hub:
+   ```bash
+   docker buildx build --platform linux/amd64,linux/arm64 -t trivip002/admin-ui:<tag> --push .
+   ```
+2. Cập nhật image tag trong K8s manifest tại repo `devapihub/argocd/app/admin-ui/k8s`
+3. Commit và push lên ArgoCD repo → ArgoCD tự sync lên EKS
+
+**Không dùng Makefile hay SCP** cho production deployment.
 
 ## Build & Dev Commands
 
