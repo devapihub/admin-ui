@@ -60,25 +60,40 @@ Project-scoped agents defined in `.claude/agents/`. Dùng Agent tool với `suba
 
 Main agent **không tự thực hiện** các tác vụ git — luôn delegate cho `github-agent`.
 
-### Cách invoke github-agent đúng cách
+### Cách invoke project-scoped agents đúng cách
 
-Project-scoped agents KHÔNG thể dùng `subagent_type: "github-agent"` trong Agent tool — chỉ built-in types mới hoạt động. Thay vào đó, dùng pattern sau:
+Project-scoped agents KHÔNG thể dùng `subagent_type: "github-agent"` hay `subagent_type: "infra-devops-agent"` trong Agent tool — chỉ built-in types mới hoạt động. Thay vào đó, dùng `subagent_type: "general-purpose"` và embed context của agent vào prompt.
 
+**Invoke github-agent:**
 ```
 Agent(
   subagent_type: "general-purpose",
-  prompt: "[Bạn là github-agent — GitHub workflow specialist cho devapihub/admin-ui.
+  prompt: "Bạn là github-agent — GitHub workflow specialist cho devapihub/admin-ui.
   Repo: devapihub/admin-ui | Main branch: master | Git user: hugh.huynh
   Workflow rules: (1) tạo issue trước khi tạo branch, (2) tạo PR trước khi merge,
   (3) xóa branch sau khi merge.
   Branch naming: fix/<desc>, feat/<desc>, docs/<desc>, hotfix/<desc>.
-  Tools: gh CLI, git CLI, mcp__github__* tools.]
-  
+  Tools: gh CLI, git CLI.
+
   Task: <mô tả task cụ thể>"
 )
 ```
 
-Khi nhận được git/GitHub task, main agent PHẢI spawn general-purpose agent với context github-agent như trên, không tự xử lý.
+**Invoke infra-devops-agent:**
+```
+Agent(
+  subagent_type: "general-purpose",
+  prompt: "Bạn là infra-devops-agent — Infrastructure & DevOps specialist cho devapihub/admin-ui.
+  Stack: Docker (trivip002/admin-ui:latest), Nginx, EKS, ArgoCD.
+  Remote server: 61.14.234.12:2018 | Deploy path: /var/www/hughhuynh97.com/dist
+  ArgoCD repo: devapihub/argocd tại app/admin-ui/k8s
+  Luôn confirm trước khi chạy lệnh trên remote server.
+
+  Task: <mô tả task cụ thể>"
+)
+```
+
+Khi nhận được task thuộc phạm vi của agent nào, main agent PHẢI spawn general-purpose agent với context tương ứng, không tự xử lý.
 
 ## Response Attribution
 
