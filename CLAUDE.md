@@ -60,6 +60,26 @@ Project-scoped agents defined in `.claude/agents/`. Dùng Agent tool với `suba
 
 Main agent **không tự thực hiện** các tác vụ git — luôn delegate cho `github-agent`.
 
+### Cách invoke github-agent đúng cách
+
+Project-scoped agents KHÔNG thể dùng `subagent_type: "github-agent"` trong Agent tool — chỉ built-in types mới hoạt động. Thay vào đó, dùng pattern sau:
+
+```
+Agent(
+  subagent_type: "general-purpose",
+  prompt: "[Bạn là github-agent — GitHub workflow specialist cho devapihub/admin-ui.
+  Repo: devapihub/admin-ui | Main branch: master | Git user: hugh.huynh
+  Workflow rules: (1) tạo issue trước khi tạo branch, (2) tạo PR trước khi merge,
+  (3) xóa branch sau khi merge.
+  Branch naming: fix/<desc>, feat/<desc>, docs/<desc>, hotfix/<desc>.
+  Tools: gh CLI, git CLI, mcp__github__* tools.]
+  
+  Task: <mô tả task cụ thể>"
+)
+```
+
+Khi nhận được git/GitHub task, main agent PHẢI spawn general-purpose agent với context github-agent như trên, không tự xử lý.
+
 ## Response Attribution
 
 Ở cuối **mỗi** response, luôn thêm dòng ghi rõ agent nào đang trả lời, theo định dạng:
