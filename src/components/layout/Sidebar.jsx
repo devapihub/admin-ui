@@ -6,6 +6,7 @@ const NAV_ITEMS = [
     { label: "Trang chủ", path: "/", icon: "🏠" },
     { label: "Ecommerce", path: "/tools", icon: "🛒" },
     { label: "Quản lý User", path: "/users", icon: "👥" },
+    { label: "Phân quyền", path: "/roles", icon: "🔐" },
 ];
 
 class Sidebar extends Component {
