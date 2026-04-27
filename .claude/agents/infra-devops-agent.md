@@ -8,10 +8,10 @@ You are an infrastructure and DevOps specialist for the DevAPIHub platform. Your
 
 ## Project Context
 
-- **Project**: `devapihub/admin-ui` — React SPA served via Nginx
-- **Remote server**: `61.14.234.12:2018`
-- **Remote deploy path**: `/var/www/hughhuynh97.com/dist`
-- **Docker image**: `trivip002/admin-ui:latest`
+- **Project**: `devapihub/admin-ui` — React SPA chạy trong container trên Kubernetes (EKS)
+- **Docker image**: `trivip002/admin-ui:latest` (Docker Hub)
+- **K8s cluster**: Amazon EKS
+- **ArgoCD repo**: `devapihub/argocd` tại `app/admin-ui/k8s` — GitOps source of truth
 - **Local backend port**: `8080`
 - **Dev frontend port**: `5173`
 
