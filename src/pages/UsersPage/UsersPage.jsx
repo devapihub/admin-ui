@@ -1,7 +1,11 @@
 import React, { Component } from "react";
+import { Typography, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import UserTable from "./UserTable.jsx";
 import UserFormModal from "./UserFormModal.jsx";
 import UserDeleteDialog from "./UserDeleteDialog.jsx";
+
+const { Title } = Typography;
 
 const MOCK_USERS = [
     { id: 1, username: "admin", email: "admin@devapihub.com", role: "admin", active: true, createdAt: "2024-01-10T08:00:00.000Z" },
@@ -17,9 +21,8 @@ class UsersPage extends Component {
         super(props);
         this.state = {
             users: [],
-            loading: false,
             modalOpen: false,
-            modalMode: "create", // "create" | "edit"
+            modalMode: "create",
             editingUser: null,
             deleteDialogOpen: false,
             deletingUserId: null,
@@ -27,7 +30,6 @@ class UsersPage extends Component {
     }
 
     componentDidMount() {
-        // TODO: thay bằng axiosClient.get("/admin/users") khi có API thật
         this.setState({ users: [...MOCK_USERS] });
     }
 
@@ -45,20 +47,11 @@ class UsersPage extends Component {
 
     handleFormSubmit = (formData) => {
         const { modalMode, editingUser, users } = this.state;
-
         if (modalMode === "create") {
-            // TODO: thay bằng axiosClient.post("/admin/users", formData)
-            const newUser = {
-                ...formData,
-                id: Date.now(),
-                createdAt: new Date().toISOString(),
-            };
+            const newUser = { ...formData, id: Date.now(), createdAt: new Date().toISOString() };
             this.setState({ users: [...users, newUser], modalOpen: false });
         } else {
-            // TODO: thay bằng axiosClient.put(`/admin/users/${editingUser.id}`, formData)
-            const updated = users.map((u) =>
-                u.id === editingUser.id ? { ...u, ...formData } : u
-            );
+            const updated = users.map((u) => u.id === editingUser.id ? { ...u, ...formData } : u);
             this.setState({ users: updated, modalOpen: false, editingUser: null });
         }
     };
@@ -69,9 +62,7 @@ class UsersPage extends Component {
 
     handleDeleteConfirm = () => {
         const { users, deletingUserId } = this.state;
-        // TODO: thay bằng axiosClient.delete(`/admin/users/${deletingUserId}`)
-        const updated = users.filter((u) => u.id !== deletingUserId);
-        this.setState({ users: updated, deleteDialogOpen: false, deletingUserId: null });
+        this.setState({ users: users.filter((u) => u.id !== deletingUserId), deleteDialogOpen: false, deletingUserId: null });
     };
 
     handleDeleteCancel = () => {
@@ -79,42 +70,20 @@ class UsersPage extends Component {
     };
 
     handleToggleActive = (id) => {
-        const { users } = this.state;
-        // TODO: thay bằng axiosClient.patch(`/admin/users/${id}/toggle`)
-        const updated = users.map((u) =>
-            u.id === id ? { ...u, active: !u.active } : u
-        );
+        const updated = this.state.users.map((u) => u.id === id ? { ...u, active: !u.active } : u);
         this.setState({ users: updated });
     };
 
     render() {
         const { users, modalOpen, modalMode, editingUser, deleteDialogOpen } = this.state;
 
-        const headerStyle = {
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 24,
-        };
-
-        const createBtnStyle = {
-            padding: "8px 18px",
-            borderRadius: 4,
-            border: "none",
-            background: "#1677ff",
-            color: "#fff",
-            cursor: "pointer",
-            fontSize: 14,
-            fontWeight: 500,
-        };
-
         return (
             <div>
-                <div style={headerStyle}>
-                    <h2 style={{ margin: 0 }}>Quản lý Người dùng</h2>
-                    <button style={createBtnStyle} onClick={this.handleCreate}>
-                        + Thêm người dùng
-                    </button>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                    <Title level={4} style={{ margin: 0 }}>Quản lý Người dùng</Title>
+                    <Button type="primary" icon={<PlusOutlined />} onClick={this.handleCreate}>
+                        Thêm người dùng
+                    </Button>
                 </div>
 
                 <UserTable

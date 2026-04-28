@@ -1,5 +1,24 @@
 import React, { Component } from "react";
-import { ThemeContext } from "../../context/ThemeContext.jsx";
+import { Card, List, Badge, Button, Typography, Avatar, Space, Tag } from "antd";
+import {
+    UserOutlined,
+    ToolOutlined,
+    BarChartOutlined,
+    CheckCircleOutlined,
+    WarningOutlined,
+    LockOutlined,
+} from "@ant-design/icons";
+
+const { Title, Text } = Typography;
+
+const ICON_MAP = {
+    "👤": <UserOutlined />,
+    "🔧": <ToolOutlined />,
+    "📊": <BarChartOutlined />,
+    "✅": <CheckCircleOutlined />,
+    "⚠️": <WarningOutlined />,
+    "🔒": <LockOutlined />,
+};
 
 const MOCK_NOTIFICATIONS = [
     { id: 1, title: "Người dùng mới đăng ký", desc: "Tài khoản user@example.com vừa đăng ký thành công.", time: "2 phút trước", unread: true, icon: "👤" },
@@ -11,8 +30,6 @@ const MOCK_NOTIFICATIONS = [
 ];
 
 class NotificationsPage extends Component {
-    static contextType = ThemeContext;
-
     constructor(props) {
         super(props);
         this.state = { notifications: MOCK_NOTIFICATIONS };
@@ -34,119 +51,67 @@ class NotificationsPage extends Component {
 
     render() {
         const { notifications } = this.state;
-        const { theme } = this.context;
         const unreadCount = notifications.filter((n) => n.unread).length;
-
-        const cardStyle = {
-            background: theme.dropdown.bg,
-            borderRadius: 10,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-            border: `1px solid ${theme.dropdown.border}`,
-            overflow: "hidden",
-        };
-
-        const headerStyle = {
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "16px 20px",
-            borderBottom: `1px solid ${theme.dropdown.border}`,
-        };
 
         return (
             <div>
-                <div style={{ marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
-                        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: theme.main.text }}>
-                            Thông báo
-                        </h2>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                    <Space align="baseline">
+                        <Title level={4} style={{ margin: 0 }}>Thông báo</Title>
                         {unreadCount > 0 && (
-                            <span style={{ fontSize: 13, color: theme.dropdown.textSub, marginTop: 4, display: "block" }}>
-                                {unreadCount} thông báo chưa đọc
-                            </span>
+                            <Badge count={unreadCount} style={{ backgroundColor: "#1677ff" }} />
                         )}
-                    </div>
+                    </Space>
                     {unreadCount > 0 && (
-                        <button
-                            onClick={this.markAllRead}
-                            style={{
-                                background: "none",
-                                border: `1px solid ${theme.dropdown.border}`,
-                                borderRadius: 6,
-                                padding: "6px 14px",
-                                fontSize: 13,
-                                color: "#1677ff",
-                                cursor: "pointer",
-                            }}
-                        >
+                        <Button onClick={this.markAllRead} size="small">
                             Đánh dấu tất cả đã đọc
-                        </button>
+                        </Button>
                     )}
                 </div>
 
-                <div style={cardStyle}>
-                    <div style={headerStyle}>
-                        <span style={{ fontWeight: 600, fontSize: 14, color: theme.dropdown.text }}>
-                            Tất cả thông báo
-                        </span>
-                        <span style={{
-                            background: "#1677ff",
-                            color: "#fff",
-                            borderRadius: 10,
-                            padding: "2px 8px",
-                            fontSize: 12,
-                            fontWeight: 600,
-                        }}>
-                            {notifications.length}
-                        </span>
-                    </div>
-
-                    {notifications.map((n, idx) => (
-                        <div
-                            key={n.id}
-                            onClick={() => this.markRead(n.id)}
-                            style={{
-                                display: "flex",
-                                alignItems: "flex-start",
-                                gap: 14,
-                                padding: "16px 20px",
-                                borderBottom: idx < notifications.length - 1 ? `1px solid ${theme.dropdown.border}` : "none",
-                                cursor: "pointer",
-                                background: n.unread
-                                    ? (theme.toggleIcon === "🌙" ? "rgba(22,119,255,0.07)" : "rgba(22,119,255,0.04)")
-                                    : "transparent",
-                                transition: "background 0.15s",
-                            }}
-                            onMouseEnter={(e) => (e.currentTarget.style.background = theme.toggleIcon === "🌙" ? "rgba(255,255,255,0.05)" : "#f5f5f5")}
-                            onMouseLeave={(e) => (e.currentTarget.style.background = n.unread ? (theme.toggleIcon === "🌙" ? "rgba(22,119,255,0.07)" : "rgba(22,119,255,0.04)") : "transparent")}
-                        >
-                            <div style={{
-                                width: 40, height: 40, borderRadius: "50%",
-                                background: theme.toggleIcon === "🌙" ? "rgba(255,255,255,0.08)" : "#f0f2f5",
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                fontSize: 18, flexShrink: 0,
-                            }}>
-                                {n.icon}
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                                    <span style={{ fontWeight: n.unread ? 600 : 400, fontSize: 14, color: theme.dropdown.text }}>
-                                        {n.title}
-                                    </span>
-                                    {n.unread && (
-                                        <span style={{
-                                            width: 7, height: 7, borderRadius: "50%",
-                                            background: "#1677ff", flexShrink: 0,
-                                            display: "inline-block",
-                                        }} />
-                                    )}
-                                </div>
-                                <div style={{ fontSize: 13, color: theme.dropdown.textSub, marginBottom: 4 }}>{n.desc}</div>
-                                <div style={{ fontSize: 12, color: theme.dropdown.textSub }}>{n.time}</div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <Card
+                    title={
+                        <Space>
+                            <span>Tất cả thông báo</span>
+                            <Tag color="blue">{notifications.length}</Tag>
+                        </Space>
+                    }
+                >
+                    <List
+                        dataSource={notifications}
+                        renderItem={(item) => (
+                            <List.Item
+                                key={item.id}
+                                onClick={() => this.markRead(item.id)}
+                                style={{
+                                    cursor: "pointer",
+                                    padding: "12px 0",
+                                    background: "transparent",
+                                }}
+                            >
+                                <List.Item.Meta
+                                    avatar={
+                                        <Badge dot={item.unread}>
+                                            <Avatar icon={ICON_MAP[item.icon] || <UserOutlined />} />
+                                        </Badge>
+                                    }
+                                    title={
+                                        <Space>
+                                            <Text strong={item.unread}>{item.title}</Text>
+                                            {item.unread && <Badge color="blue" />}
+                                        </Space>
+                                    }
+                                    description={
+                                        <div>
+                                            <div style={{ marginBottom: 4 }}>{item.desc}</div>
+                                            <Text type="secondary" style={{ fontSize: 12 }}>{item.time}</Text>
+                                        </div>
+                                    }
+                                />
+                            </List.Item>
+                        )}
+                    />
+                </Card>
             </div>
         );
     }

@@ -1,24 +1,23 @@
 import React, { Component } from "react";
+import { Typography, Button, Space } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { MOCK_TOOLS } from "../../data/mockTools.js";
 import ToolTable from "./ToolTable.jsx";
 import ToolFormModal from "./ToolFormModal.jsx";
 import ToolDeleteDialog from "./ToolDeleteDialog.jsx";
-import { ThemeContext } from "../../context/ThemeContext.jsx";
+
+const { Title } = Typography;
 
 class ToolsPage extends Component {
-    static contextType = ThemeContext;
-
     constructor(props) {
         super(props);
         this.state = {
             tools: [],
-            loading: false,
             modalOpen: false,
             modalMode: "create",
             editingTool: null,
             deleteDialogOpen: false,
             deletingToolId: null,
-            error: "",
         };
     }
 
@@ -40,7 +39,6 @@ class ToolsPage extends Component {
 
     handleFormSubmit = (formData) => {
         const { modalMode, editingTool, tools } = this.state;
-
         if (modalMode === "create") {
             const newTool = { ...formData, id: Date.now(), createdAt: new Date().toISOString() };
             this.setState({ tools: [...tools, newTool], modalOpen: false });
@@ -56,8 +54,7 @@ class ToolsPage extends Component {
 
     handleDeleteConfirm = () => {
         const { tools, deletingToolId } = this.state;
-        const updated = tools.filter((t) => t.id !== deletingToolId);
-        this.setState({ tools: updated, deleteDialogOpen: false, deletingToolId: null });
+        this.setState({ tools: tools.filter((t) => t.id !== deletingToolId), deleteDialogOpen: false, deletingToolId: null });
     };
 
     handleDeleteCancel = () => {
@@ -65,25 +62,20 @@ class ToolsPage extends Component {
     };
 
     handleToggleActive = (id) => {
-        const { tools } = this.state;
-        const updated = tools.map((t) => t.id === id ? { ...t, active: !t.active } : t);
+        const updated = this.state.tools.map((t) => t.id === id ? { ...t, active: !t.active } : t);
         this.setState({ tools: updated });
     };
 
     render() {
         const { tools, modalOpen, modalMode, editingTool, deleteDialogOpen } = this.state;
-        const { theme } = this.context;
 
         return (
             <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                    <h2 style={{ margin: 0, color: theme.main.text }}>Quản lý Sản phẩm</h2>
-                    <button
-                        style={{ padding: "8px 18px", borderRadius: 4, border: "none", background: "#1677ff", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 500 }}
-                        onClick={this.handleCreate}
-                    >
-                        + Thêm sản phẩm
-                    </button>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                    <Title level={4} style={{ margin: 0 }}>Quản lý Sản phẩm</Title>
+                    <Button type="primary" icon={<PlusOutlined />} onClick={this.handleCreate}>
+                        Thêm sản phẩm
+                    </Button>
                 </div>
 
                 <ToolTable
