@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Form, Input, Button, Alert } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import adminClient from "../../api/adminClient.js";
 
 const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "admin";
@@ -20,6 +21,9 @@ class LoginForm extends Component {
             if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
                 localStorage.setItem("token", "mock-admin-token");
                 localStorage.setItem("username", username);
+                adminClient.get("/public/hello")
+                    .then((res) => console.log("[public/hello]", res.data))
+                    .catch((err) => console.error("[public/hello] error:", err));
                 this.props.onLoginSuccess(username);
             } else {
                 this.setState({ error: "Sai username hoặc password", loading: false });

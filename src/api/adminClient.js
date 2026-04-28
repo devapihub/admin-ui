@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosAdminClient = axios.create({
-    baseURL: "https://www.devapihub.com/api",
+    baseURL: "/api",
     timeout: 10000,
 });
 
