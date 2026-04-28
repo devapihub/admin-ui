@@ -20,6 +20,7 @@ export const THEMES = {
 export const ThemeContext = createContext({
     theme: THEMES.light,
     themeName: "light",
+    isDark: false,
     toggleTheme: () => {},
 });
 
@@ -45,6 +46,7 @@ class ThemeProvider extends Component {
                 value={{
                     theme: THEMES[themeName],
                     themeName,
+                    isDark: themeName === "dark",
                     toggleTheme: this.toggleTheme,
                 }}
             >

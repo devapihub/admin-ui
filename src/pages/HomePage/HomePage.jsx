@@ -1,65 +1,75 @@
 import React, { Component } from "react";
+import { Card, Typography, Spin, Alert, Descriptions, Tag, Row, Col, Statistic } from "antd";
+import { UserOutlined, SafetyOutlined, ApiOutlined } from "@ant-design/icons";
 import axiosClient from "../../api/adminClient.js";
+
+const { Title } = Typography;
 
 class HomePage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            loadingProfile: true,
-            profile: null,
-            error: "",
-        };
+        this.state = { loadingProfile: true, profile: null, error: "" };
     }
 
     async componentDidMount() {
         try {
             const res = await axiosClient.get("/user/profile");
-            this.setState({
-                profile: res.data, // { id, username, roles: [] }
-                loadingProfile: false,
-            });
-        } catch (error) {
-            console.error(error);
-            this.setState({
-                error: "Không lấy được thông tin user",
-                loadingProfile: false,
-            });
+            this.setState({ profile: res.data, loadingProfile: false });
+        } catch {
+            this.setState({ error: "Không lấy được thông tin user", loadingProfile: false });
         }
     }
 
     render() {
         const { loadingProfile, profile, error } = this.state;
 
-        const cardStyle = {
-            padding: "24px 28px",
-            background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-            maxWidth: 400,
-        };
-
         return (
             <div>
-                <h2 style={{ marginTop: 0, marginBottom: 24 }}>Trang chủ</h2>
-                <div style={cardStyle}>
-                    {loadingProfile && <p>Đang tải thông tin user...</p>}
+                <Title level={4} style={{ marginBottom: 24 }}>Trang chủ</Title>
 
-                    {!loadingProfile && error && <p style={{ color: "red" }}>{error}</p>}
+                <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+                    <Col xs={24} sm={8}>
+                        <Card>
+                            <Statistic title="Người dùng" value={6} prefix={<UserOutlined />} valueStyle={{ color: "#1677ff" }} />
+                        </Card>
+                    </Col>
+                    <Col xs={24} sm={8}>
+                        <Card>
+                            <Statistic title="Sản phẩm" value={4} prefix={<ApiOutlined />} valueStyle={{ color: "#52c41a" }} />
+                        </Card>
+                    </Col>
+                    <Col xs={24} sm={8}>
+                        <Card>
+                            <Statistic title="Phân quyền" value={3} prefix={<SafetyOutlined />} valueStyle={{ color: "#fa8c16" }} />
+                        </Card>
+                    </Col>
+                </Row>
+
+                <Card title="Thông tin tài khoản" style={{ maxWidth: 500 }}>
+                    {loadingProfile && (
+                        <div style={{ textAlign: "center", padding: 24 }}>
+                            <Spin tip="Đang tải..." />
+                        </div>
+                    )}
+
+                    {!loadingProfile && error && (
+                        <Alert message={error} type="error" showIcon />
+                    )}
 
                     {!loadingProfile && profile && (
-                        <>
-                            <h3 style={{ marginTop: 0 }}>Thông tin tài khoản</h3>
-                            <p><strong>Username:</strong> {profile.username}</p>
-                            <p><strong>ID:</strong> {profile.id}</p>
-                            <p>
-                                <strong>Roles:</strong>{" "}
+                        <Descriptions column={1} size="small">
+                            <Descriptions.Item label="Username">
+                                <strong>{profile.username}</strong>
+                            </Descriptions.Item>
+                            <Descriptions.Item label="ID">{profile.id}</Descriptions.Item>
+                            <Descriptions.Item label="Roles">
                                 {profile.roles && profile.roles.length > 0
-                                    ? profile.roles.join(", ")
-                                    : "N/A"}
-                            </p>
-                        </>
+                                    ? profile.roles.map((r) => <Tag key={r} color="blue">{r}</Tag>)
+                                    : <Tag>N/A</Tag>}
+                            </Descriptions.Item>
+                        </Descriptions>
                     )}
-                </div>
+                </Card>
             </div>
         );
     }

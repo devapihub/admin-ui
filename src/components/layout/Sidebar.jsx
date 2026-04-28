@@ -1,124 +1,88 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { ThemeContext } from "../../context/ThemeContext.jsx";
+import { Layout, Menu } from "antd";
+import { Link, useLocation } from "react-router-dom";
+import {
+    HomeOutlined,
+    ShoppingOutlined,
+    TeamOutlined,
+    SafetyOutlined,
+} from "@ant-design/icons";
+
+const { Sider } = Layout;
 
 const NAV_ITEMS = [
-    { label: "Trang chủ", path: "/", icon: "🏠" },
-    { label: "Ecommerce", path: "/tools", icon: "🛒" },
-    { label: "Quản lý User", path: "/users", icon: "👥" },
-    { label: "Phân quyền", path: "/roles", icon: "🔐" },
+    { label: "Trang chủ", path: "/", icon: <HomeOutlined /> },
+    { label: "Ecommerce", path: "/tools", icon: <ShoppingOutlined /> },
+    { label: "Quản lý User", path: "/users", icon: <TeamOutlined /> },
+    { label: "Phân quyền", path: "/roles", icon: <SafetyOutlined /> },
 ];
 
-class Sidebar extends Component {
-    static contextType = ThemeContext;
+function SidebarInner({ collapsed, onCollapse }) {
+    const location = useLocation();
 
-    constructor(props) {
-        super(props);
-        this.state = { collapsed: false };
-    }
+    const menuItems = NAV_ITEMS.map((item) => ({
+        key: item.path,
+        icon: item.icon,
+        label: <Link to={item.path}>{item.label}</Link>,
+    }));
 
-    handleToggle = () => {
-        const collapsed = !this.state.collapsed;
-        this.setState({ collapsed });
-        if (this.props.onCollapse) {
-            this.props.onCollapse(collapsed);
-        }
-    };
-
-    render() {
-        const { collapsed } = this.state;
-        const { theme } = this.context;
-        const currentPath = window.location.pathname;
-        const width = collapsed ? 56 : 220;
-
-        const sidebarStyle = {
-            width,
-            minHeight: "100vh",
-            background: theme.sidebar.bg,
-            display: "flex",
-            flexDirection: "column",
-            transition: "width 0.2s ease, background 0.2s ease",
-            flexShrink: 0,
-            position: "fixed",
-            top: 0,
-            left: 0,
-            bottom: 0,
-            zIndex: 200,
-            overflow: "hidden",
-        };
-
-        const logoStyle = {
-            height: 56,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: collapsed ? "center" : "space-between",
-            padding: collapsed ? "0 12px" : "0 16px",
-            borderBottom: `1px solid ${theme.sidebar.border}`,
-            flexShrink: 0,
-        };
-
-        const logoTextStyle = {
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: 15,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-        };
-
-        const toggleBtnStyle = {
-            background: "none",
-            border: "none",
-            color: "rgba(255,255,255,0.7)",
-            cursor: "pointer",
-            fontSize: 18,
-            padding: "4px",
-            lineHeight: 1,
-            flexShrink: 0,
-        };
-
-        const navStyle = {
-            flex: 1,
-            paddingTop: 8,
-        };
-
-        return (
-            <div style={sidebarStyle}>
-                <div style={logoStyle}>
-                    {!collapsed && <span style={logoTextStyle}>DevAPIHub</span>}
-                    <button style={toggleBtnStyle} onClick={this.handleToggle} title="Thu gọn/Mở rộng">
-                        {collapsed ? "▶" : "◀"}
-                    </button>
-                </div>
-
-                <nav style={navStyle}>
-                    {NAV_ITEMS.map((item) => {
-                        const isActive = currentPath === item.path;
-                        const itemStyle = {
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            padding: collapsed ? "12px 0" : "12px 16px",
-                            justifyContent: collapsed ? "center" : "flex-start",
-                            textDecoration: "none",
-                            color: isActive ? theme.sidebar.textActive : theme.sidebar.text,
-                            background: isActive ? "rgba(255,255,255,0.12)" : "transparent",
-                            borderLeft: isActive ? "3px solid #4f8ef7" : "3px solid transparent",
-                            fontSize: 14,
-                            transition: "background 0.15s",
-                        };
-
-                        return (
-                            <Link key={item.path} to={item.path} style={itemStyle}>
-                                <span style={{ fontSize: 18 }}>{item.icon}</span>
-                                {!collapsed && (
-                                    <span style={{ whiteSpace: "nowrap" }}>{item.label}</span>
-                                )}
-                            </Link>
-                        );
-                    })}
-                </nav>
+    return (
+        <Sider
+            collapsible
+            collapsed={collapsed}
+            onCollapse={onCollapse}
+            width={220}
+            collapsedWidth={80}
+            style={{
+                overflow: "auto",
+                height: "100vh",
+                position: "fixed",
+                left: 0,
+                top: 0,
+                bottom: 0,
+                background: "#1a1a2e",
+                zIndex: 200,
+            }}
+            trigger={null}
+        >
+            <div
+                style={{
+                    height: 64,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 16px",
+                    borderBottom: "1px solid rgba(255,255,255,0.08)",
+                }}
+            >
+                {!collapsed && (
+                    <span style={{ color: "#fff", fontWeight: 700, fontSize: 16, whiteSpace: "nowrap" }}>
+                        DevAPIHub
+                    </span>
+                )}
+                {collapsed && (
+                    <span style={{ color: "#1677ff", fontWeight: 700, fontSize: 20 }}>D</span>
+                )}
             </div>
-        );
+
+            <Menu
+                theme="dark"
+                mode="inline"
+                selectedKeys={[location.pathname]}
+                items={menuItems}
+                style={{
+                    background: "#1a1a2e",
+                    border: "none",
+                    marginTop: 8,
+                }}
+            />
+        </Sider>
+    );
+}
+
+class Sidebar extends Component {
+    render() {
+        return <SidebarInner {...this.props} />;
     }
 }
 

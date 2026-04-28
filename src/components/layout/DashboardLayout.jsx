@@ -1,53 +1,54 @@
 import React, { Component } from "react";
+import { Layout } from "antd";
 import Sidebar from "./Sidebar.jsx";
 import Topbar from "./Topbar.jsx";
 import { ThemeContext } from "../../context/ThemeContext.jsx";
+
+const { Content } = Layout;
 
 class DashboardLayout extends Component {
     static contextType = ThemeContext;
 
     constructor(props) {
         super(props);
-        this.state = { sidebarCollapsed: false };
+        this.state = { collapsed: false };
     }
 
-    handleCollapseChange = (collapsed) => {
-        this.setState({ sidebarCollapsed: collapsed });
+    handleCollapse = (collapsed) => {
+        this.setState({ collapsed });
     };
 
     render() {
         const { username, onLogout, children } = this.props;
-        const { sidebarCollapsed } = this.state;
-        const { theme } = this.context;
-        const sidebarWidth = sidebarCollapsed ? 56 : 220;
-
-        const contentWrapperStyle = {
-            marginLeft: sidebarWidth,
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            minHeight: "100vh",
-            transition: "margin-left 0.2s ease",
-        };
-
-        const mainStyle = {
-            flex: 1,
-            padding: 24,
-            background: theme.main.bg,
-            color: theme.main.text,
-            overflowY: "auto",
-            fontFamily: "sans-serif",
-            transition: "background 0.2s ease",
-        };
+        const { collapsed } = this.state;
+        const { isDark } = this.context;
 
         return (
-            <div style={{ display: "flex", minHeight: "100vh" }}>
-                <Sidebar onCollapse={this.handleCollapseChange} />
-                <div style={contentWrapperStyle}>
-                    <Topbar username={username} onLogout={onLogout} />
-                    <main style={mainStyle}>{children}</main>
-                </div>
-            </div>
+            <Layout style={{ minHeight: "100vh" }}>
+                <Sidebar collapsed={collapsed} onCollapse={this.handleCollapse} />
+                <Layout
+                    style={{
+                        marginLeft: collapsed ? 80 : 220,
+                        transition: "margin-left 0.2s",
+                        background: isDark ? "#12121f" : "#f0f2f5",
+                    }}
+                >
+                    <Topbar
+                        username={username}
+                        onLogout={onLogout}
+                        collapsed={collapsed}
+                        onCollapse={this.handleCollapse}
+                    />
+                    <Content
+                        style={{
+                            margin: "80px 24px 24px",
+                            minHeight: "calc(100vh - 104px)",
+                        }}
+                    >
+                        {children}
+                    </Content>
+                </Layout>
+            </Layout>
         );
     }
 }

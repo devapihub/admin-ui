@@ -1,13 +1,14 @@
 import React, { Component } from "react";
+import { Typography, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { MOCK_ROLES } from "./mockRoles.js";
 import RoleTable from "./RoleTable.jsx";
 import RoleFormModal from "./RoleFormModal.jsx";
 import RoleDeleteDialog from "./RoleDeleteDialog.jsx";
-import { ThemeContext } from "../../context/ThemeContext.jsx";
+
+const { Title } = Typography;
 
 class RolePermissionPage extends Component {
-    static contextType = ThemeContext;
-
     constructor(props) {
         super(props);
         this.state = {
@@ -66,18 +67,14 @@ class RolePermissionPage extends Component {
 
     render() {
         const { roles, modalOpen, modalMode, editingRole, deleteDialogOpen, deletingRole } = this.state;
-        const { theme } = this.context;
 
         return (
             <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                    <h2 style={{ margin: 0, color: theme.main.text }}>Phân quyền</h2>
-                    <button
-                        style={{ padding: "8px 18px", borderRadius: 4, border: "none", background: "#1677ff", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 500 }}
-                        onClick={this.handleCreate}
-                    >
-                        + Thêm Role
-                    </button>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                    <Title level={4} style={{ margin: 0 }}>Phân quyền</Title>
+                    <Button type="primary" icon={<PlusOutlined />} onClick={this.handleCreate}>
+                        Thêm Role
+                    </Button>
                 </div>
 
                 <RoleTable
