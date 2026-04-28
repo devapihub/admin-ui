@@ -36,7 +36,8 @@ class Topbar extends Component {
 
     render() {
         const { username, onLogout, collapsed, onCollapse } = this.props;
-        const { isDark, toggleTheme } = this.context;
+        const { isDark, toggleTheme, theme } = this.context;
+        const topbar = theme.topbar;
 
         const initial = username ? username.charAt(0).toUpperCase() : "U";
         const unreadCount = MOCK_NOTIFS.filter((n) => n.unread).length;
@@ -106,7 +107,8 @@ class Topbar extends Component {
                     padding: "0 24px",
                     height: 64,
                     transition: "left 0.2s",
-                    boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+                    backgroundColor: topbar.bg,
+                    boxShadow: topbar.shadow,
                 }}
             >
                 <Space>
@@ -114,9 +116,9 @@ class Topbar extends Component {
                         type="text"
                         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                         onClick={() => onCollapse(!collapsed)}
-                        style={{ fontSize: 16 }}
+                        style={{ fontSize: 16, color: topbar.text }}
                     />
-                    <Text strong style={{ fontSize: 15 }}>DevAPIHub Admin</Text>
+                    <Text strong style={{ fontSize: 15, color: topbar.text }}>DevAPIHub Admin</Text>
                 </Space>
 
                 <Space size={4}>
@@ -125,6 +127,7 @@ class Topbar extends Component {
                         icon={isDark ? <SunOutlined /> : <MoonOutlined />}
                         onClick={toggleTheme}
                         title="Đổi theme"
+                        style={{ color: topbar.text }}
                     />
 
                     <Popover
@@ -133,7 +136,7 @@ class Topbar extends Component {
                         placement="bottomRight"
                     >
                         <Badge count={unreadCount} size="small">
-                            <Button type="text" icon={<BellOutlined />} />
+                            <Button type="text" icon={<BellOutlined />} style={{ color: topbar.text }} />
                         </Badge>
                     </Popover>
 
