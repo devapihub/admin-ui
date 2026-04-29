@@ -2,6 +2,7 @@ import React, { Component, useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ConfigProvider, theme as antdTheme } from "antd";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage/RegisterPage.jsx";
 import HomePage from "./pages/HomePage/HomePage.jsx";
 import ToolsPage from "./pages/ToolsPage/ToolsPage.jsx";
 import UsersPage from "./pages/UsersPage/UsersPage.jsx";
@@ -130,6 +131,16 @@ class App extends Component {
                                         <Navigate to="/" replace />
                                     ) : (
                                         <LoginPage onLoginSuccess={this.handleLoginSuccess} />
+                                    )
+                                }
+                            />
+                            <Route
+                                path="/register"
+                                element={
+                                    isLoggedIn ? (
+                                        <Navigate to="/" replace />
+                                    ) : (
+                                        <RegisterPage />
                                     )
                                 }
                             />

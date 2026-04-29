@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { Form, Input, Button, Alert } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 import adminClient from "../../api/adminClient.js";
-
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "admin";
 
 class LoginForm extends Component {
     constructor(props) {
@@ -13,22 +11,28 @@ class LoginForm extends Component {
         this.state = { error: "", loading: false };
     }
 
-    handleSubmit = (values) => {
-        const { username, password } = values;
+    handleSubmit = async (values) => {
         this.setState({ loading: true, error: "" });
+        try {
+            const { data } = await adminClient.post("/auth/login", {
+                username: values.username,
+                password: values.password,
+            });
 
-        setTimeout(() => {
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                localStorage.setItem("token", "mock-admin-token");
-                localStorage.setItem("username", username);
-                adminClient.get("/public/hello")
-                    .then((res) => console.log("[public/hello]", res.data))
-                    .catch((err) => console.error("[public/hello] error:", err));
-                this.props.onLoginSuccess(username);
-            } else {
-                this.setState({ error: "Sai username hoặc password", loading: false });
-            }
-        }, 600);
+            localStorage.setItem("token", data.jwt);
+            localStorage.setItem("username", data.username);
+
+            adminClient.get("/public/hello")
+                .then((res) => console.log("[public/hello]", res.data))
+                .catch((err) => console.error("[public/hello] error:", err));
+
+            this.props.onLoginSuccess(data.username);
+        } catch (err) {
+            const msg = err.response?.status === 401
+                ? "Sai username hoặc password"
+                : "Đăng nhập thất bại, vui lòng thử lại";
+            this.setState({ error: msg, loading: false });
+        }
     };
 
     render() {
@@ -71,7 +75,7 @@ class LoginForm extends Component {
                     />
                 </Form.Item>
 
-                <Form.Item style={{ marginBottom: 0 }}>
+                <Form.Item style={{ marginBottom: 8 }}>
                     <Button
                         type="primary"
                         htmlType="submit"
@@ -83,6 +87,11 @@ class LoginForm extends Component {
                         Đăng nhập
                     </Button>
                 </Form.Item>
+
+                <div style={{ textAlign: "center", fontSize: 13 }}>
+                    Chưa có tài khoản?{" "}
+                    <Link to="/register">Đăng ký ngay</Link>
+                </div>
             </Form>
         );
     }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Card, Typography } from "antd";
-import LoginForm from "../../components/auth/LoginForm";
+import RegisterForm from "../../components/auth/RegisterForm";
 
 const { Title, Text } = Typography;
 
@@ -10,7 +10,7 @@ const FEATURES = [
     "Theo dõi hoạt động hệ thống",
 ];
 
-class LoginPage extends Component {
+class RegisterPage extends Component {
     render() {
         return (
             <div style={{ minHeight: "100vh", display: "flex", fontFamily: "'Segoe UI', sans-serif" }}>
@@ -82,11 +82,11 @@ class LoginPage extends Component {
                     }}
                 >
                     <Card style={{ width: "100%", maxWidth: 420, boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
-                        <Title level={3} style={{ marginBottom: 4 }}>Chào mừng trở lại</Title>
+                        <Title level={3} style={{ marginBottom: 4 }}>Tạo tài khoản</Title>
                         <Text type="secondary" style={{ display: "block", marginBottom: 28 }}>
-                            Đăng nhập vào trang quản trị DevAPIHub
+                            Đăng ký để sử dụng DevAPIHub Admin
                         </Text>
-                        <LoginForm onLoginSuccess={this.props.onLoginSuccess} />
+                        <RegisterForm />
                     </Card>
                 </div>
             </div>
@@ -94,4 +94,4 @@ class LoginPage extends Component {
     }
 }
 
-export default LoginPage;
+export default RegisterPage;
