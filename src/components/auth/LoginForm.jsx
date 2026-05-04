@@ -98,7 +98,7 @@ class LoginForm extends Component {
                 <Button
                     size="large"
                     block
-                    onClick={() => { window.location.href = "/api/auth/google"; }}
+                    onClick={() => { window.location.href = "/api/oauth2/authorization/google"; }}
                     style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, border: "1px solid #d9d9d9", background: "#fff", color: "#444", fontWeight: 500 }}
                 >
                     <svg width="18" height="18" viewBox="0 0 48 48" style={{ flexShrink: 0 }}>
