@@ -9,6 +9,7 @@ import UsersPage from "./pages/UsersPage/UsersPage.jsx";
 import NotificationsPage from "./pages/NotificationsPage/NotificationsPage.jsx";
 import RolePermissionPage from "./pages/RolePermissionPage/RolePermissionPage.jsx";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
+import OAuthCallbackPage from "./pages/OAuthCallbackPage/OAuthCallbackPage.jsx";
 import ThemeProvider, { ThemeContext } from "./context/ThemeContext.jsx";
 import "./App.css";
 
@@ -143,6 +144,10 @@ class App extends Component {
                                         <RegisterPage />
                                     )
                                 }
+                            />
+                            <Route
+                                path="/oauth2/callback"
+                                element={<OAuthCallbackPage onLoginSuccess={this.handleLoginSuccess} />}
                             />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
